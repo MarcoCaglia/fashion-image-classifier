@@ -1,2 +1,5 @@
 # Local VSCode cache
 .vscode
+
+# Local Working directory (for data, logs, etc...)
+workdir/
