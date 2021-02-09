@@ -1,5 +1,6 @@
-# Local VSCode cache
+# Local caches
 .vscode
+__pycache___
 
 # Local Working directory (for data, logs, etc...)
 workdir/
