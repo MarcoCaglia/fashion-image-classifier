@@ -58,7 +58,7 @@ class SourcingPipeline:
             index=False
         )
 
-        clothing_data.to_sql(
+        image_data.to_sql(
             "images",
             con=self.engine,
             if_exists="append",
