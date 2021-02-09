@@ -3,3 +3,6 @@
 
 # Local Working directory (for data, logs, etc...)
 workdir/
+
+# Crawl records
+sourcing/crawls
