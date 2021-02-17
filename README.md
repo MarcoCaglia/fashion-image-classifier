@@ -1,7 +1,7 @@
 # Fashion Image Classifier
 
 ## Purpose & Description
-The purpose of this repository is to train a binary classifier
+The purpose of this repository is to train a binary image classifier, which can predict of a piece of clothing on an image is worn by a model, or if the piece is displayed by itself.
 
 ## Getting Started
 You can clone this repo by running 
