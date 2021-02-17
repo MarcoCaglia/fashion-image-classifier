@@ -1,0 +1,27 @@
+prepare:
+  cmd: python3 prototypes/prepare.py
+  deps:
+  - path: prototypes/prepare.py
+    md5: f8704165b0f19d5fe7222df35255a4aa
+    size: 1704
+  - path: workdir/training_images/not-worn/
+    md5: 3e7d648dd090a611d86140d4f794b6b6.dir
+    size: 8225753
+    nfiles: 97
+  - path: workdir/training_images/worn/
+    md5: e0d1086812f64e2a5aca7b8db91f01c0.dir
+    size: 40070000
+    nfiles: 309
+  outs:
+  - path: workdir/test_features.npy
+    md5: 03382932046e3b8938cf0c9d37e82b34
+    size: 8061056
+  - path: workdir/test_labels.npy
+    md5: dd1e55dc9fb61c9cace6377490f7dd3f
+    size: 456
+  - path: workdir/train_features.npy
+    md5: c55ced6cdbcaabdb8c197cb9a78ea6c3
+    size: 71762048
+  - path: workdir/train_labels.npy
+    md5: 06f997b9771218cb02eecce4cf37b27a
+    size: 3048
