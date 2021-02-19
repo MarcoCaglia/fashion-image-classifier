@@ -17,4 +17,4 @@ sourcing/crawls
 *.ipynb
 
 # Exception for Prototype Notebooks
-!prototypes/*.ipynb
+!scripts/*.ipynb

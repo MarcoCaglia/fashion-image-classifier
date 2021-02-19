@@ -10,3 +10,28 @@ stages:
     - workdir/test_labels.npy
     - workdir/train_features.npy
     - workdir/train_labels.npy
+  train:
+    cmd: python3 scripts/train.py
+    deps:
+    - workdir/train_features.npy
+    - workdir/train_labels.npy
+    params:
+    - train.classifier__C
+    - train.classifier__gamma
+    - train.classifier__kernel
+    - train.pca__kernel
+    - train.pca__n_components
+    - train.pca__rbf_gamma
+    - train.use_pca
+    - train.use_scaler
+    outs:
+    - workdir/model.joblib
+  evaluate:
+    cmd: python3 scripts/evaluate.py
+    deps:
+    - workdir/model.joblib
+    - workdir/test_features.npy
+    - workdir/test_labels.npy
+    outs:
+    - workdir/model_test_confusion.png
+    - workdir/model_test_results.csv

@@ -2,3 +2,6 @@
 /test_labels.npy
 /train_features.npy
 /train_labels.npy
+/model.joblib
+/model_test_results.csv
+/model_test_confusion.png

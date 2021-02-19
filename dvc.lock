@@ -25,3 +25,45 @@ prepare:
   - path: workdir/train_labels.npy
     md5: 06f997b9771218cb02eecce4cf37b27a
     size: 3048
+train:
+  cmd: python3 scripts/train.py
+  deps:
+  - path: workdir/train_features.npy
+    md5: c55ced6cdbcaabdb8c197cb9a78ea6c3
+    size: 71762048
+  - path: workdir/train_labels.npy
+    md5: 06f997b9771218cb02eecce4cf37b27a
+    size: 3048
+  params:
+    params.yaml:
+      train.classifier__C: 4.173106293191033
+      train.classifier__gamma: 0.23475931378300663
+      train.classifier__kernel: linear
+      train.pca__kernel: rbf
+      train.pca__n_components: 321
+      train.pca__rbf_gamma: 0.9682615757193975
+      train.use_pca: false
+      train.use_scaler: true
+  outs:
+  - path: workdir/model.joblib
+    md5: 8f3e9410eacef3e10b4874bf839c7da5
+    size: 204476595
+evaluate:
+  cmd: python3 scripts/evaluate.py
+  deps:
+  - path: workdir/model.joblib
+    md5: 8f3e9410eacef3e10b4874bf839c7da5
+    size: 204476595
+  - path: workdir/test_features.npy
+    md5: 03382932046e3b8938cf0c9d37e82b34
+    size: 8061056
+  - path: workdir/test_labels.npy
+    md5: dd1e55dc9fb61c9cace6377490f7dd3f
+    size: 456
+  outs:
+  - path: workdir/model_test_confusion.png
+    md5: 545decbb57e8ddaa2c7f541a8d8960d9
+    size: 6911
+  - path: workdir/model_test_results.csv
+    md5: be692c7e477dfdf631efc9cd8a2e7a9e
+    size: 122
