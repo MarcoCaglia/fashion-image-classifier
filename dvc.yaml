@@ -1,8 +1,8 @@
 stages:
   prepare:
-    cmd: python3 prototypes/prepare.py
+    cmd: python3 scripts/prepare.py
     deps:
-    - prototypes/prepare.py
+    - scripts/prepare.py
     - workdir/training_images/not-worn/
     - workdir/training_images/worn/
     outs:

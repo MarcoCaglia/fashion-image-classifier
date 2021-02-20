@@ -1,7 +1,7 @@
 prepare:
-  cmd: python3 prototypes/prepare.py
+  cmd: python3 scripts/prepare.py
   deps:
-  - path: prototypes/prepare.py
+  - path: scripts/prepare.py
     md5: f8704165b0f19d5fe7222df35255a4aa
     size: 1704
   - path: workdir/training_images/not-worn/
