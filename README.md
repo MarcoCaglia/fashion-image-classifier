@@ -30,6 +30,14 @@ The resulting (sqlite3) `project.db` will contain two tables: pieces and images.
 By default, the scraper will source from zalando.nl. As of now, this can only be changed in the spider code itself.
 
 
-### Step 1: Labeling Images
+### Step 1: Labeling Images (for Training) (TODO)
+
+The scraper will not scrape the images themselves, but rather the URLs of those images, which will then be stored in the DB (table: images).
+
+To load, label and store the data, the user can use the jupyter notebook scripts/label_images.ipynb. The code will load a random sample of images from the database, present them in the notebook for labeling and will the safe them in the appropriate folder, depending of the user's input.
 
 ### Step 2: Running the DVC pipeline
+
+The DVC pipeline is already created and stored in the dvc.yaml file. To reproduce the original model training, the user shoudl run `dvc repro`.
+
+By default, DVC will store added files in a local minio bucket. Minio can be started by navigating into the `workdir` of this repo and running `docker-compose up`. Note that when running this command for the first time, the user would need to create a bucket called `image-classification`, which is the bucket, that DVC will store files in. By default the minio container runs on port 9000 and the credentials are loaded from the .env file in the `workdir` folder (not the main folder).
