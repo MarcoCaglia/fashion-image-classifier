@@ -20,7 +20,7 @@ class FeatureExtractor:
 
         Args:
             greyscale (bool, optional): If set to True, the images will be in
-                greyscale, without colours. Defaults to False.
+                greyscale, without colours. Defaults to False. TODO
             aspect_ration (Tuple[int, int], optional): If specified, the aspect
                 ratio will be addjusted to the passed shape. Defaults to
                 (256, 256).
