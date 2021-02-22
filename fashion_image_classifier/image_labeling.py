@@ -3,20 +3,21 @@
 import hashlib
 from io import BytesIO
 from pathlib import Path
-from typing import List
+from typing import Iterable, List
 
+import numpy as np
 import pandas as pd
+import PIL
 import requests
 from IPython.display import display
 from pigeon import annotate
 from PIL import Image
-import numpy as np
 
 
 class ImageLabeler:
     """Helper Class for labeling images in a jupyter notebook."""
 
-    def __init__(self, urls: List[str], save_path: str) -> None:
+    def __init__(self, urls: Iterable[str], save_path: str) -> None:
         """Initialize Imagelabeler.
 
         Args:
@@ -37,6 +38,10 @@ class ImageLabeler:
         # Raise an exception if the passed save_path does not exist
         if not self.save_path.is_dir():
             raise AssertionError("Save_path is not a location.")
+
+        # In this empty list, the downloaded images will be stored until the
+        # user writes them to disk.
+        self.actual_images: List[PIL.Image] = []
 
     def _get_image_identifiers(self):
         # The unique identifier for each image (URL) will be the hashed URL, To
@@ -66,15 +71,20 @@ class ImageLabeler:
         self._check_subclass_folders_exist(standardized_options)
 
         # Get all previously labeled images to make sure they are not labeled
-        # again. TODO
+        # again.
+        labeled_images_hashes = []
         for option in standardized_options:
             subclass_path = self.save_path.joinpath(option).glob('*.png')
-            file_hashes = [
+            labeled_images_hashes += [
                 file.absolute().as_posix().split("/")[-1].replace(".png", "")
                 for file
                 in subclass_path
                 ]
+        self.images = filter(
+            lambda image: image[1] not in labeled_images_hashes, self.images
+            )
 
+        # Present Annotation
         self.annotated = annotate(
             self.images,
             options=standardized_options,
@@ -88,6 +98,13 @@ class ImageLabeler:
         the label on the image. Can be done at any time, even when labeling is
         still in progress.
         """
+        # Use the label and url_hash from the annotated URLs, alongside the
+        # actual images (downloaded and stored during annotation) to write
+        # the results to disk.
+        for index, labeled_images in enumerate(self.annotated):
+            path = self.save_path.joinpath(labeled_images[1]) \
+                .joinpath(labeled_images[0][1] + ".png")
+            self.actual_images[index].save(path)
 
     def _check_subclass_folders_exist(self, standardized_options):
         # For every option, make sure there is already a folder for it, 
@@ -103,4 +120,5 @@ class ImageLabeler:
         url = url_id[0]
         byte_response = requests.get(url)
         image = Image.open(BytesIO(byte_response.content))
+        self.actual_images.append(image)
         display(image)
