@@ -39,5 +39,6 @@ To load, label and store the data, the user can use the jupyter notebook scripts
 ### Step 2: Running the DVC pipeline
 
 The DVC pipeline is already created and stored in the dvc.yaml file. To reproduce the original model training, the user shoudl run `dvc repro`.
+The trained and evaluated model will be saved to the `workdir`.
 
 By default, DVC will store added files in a local minio bucket. Minio can be started by navigating into the `workdir` of this repo and running `docker-compose up`. Note that when running this command for the first time, the user would need to create a bucket called `image-classification`, which is the bucket, that DVC will store files in. By default the minio container runs on port 9000 and the credentials are loaded from the .env file in the `workdir` folder (not the main folder).
