@@ -7,10 +7,10 @@ from sklearn.model_selection import train_test_split
 
 NEGATIVES_PATHS = Path(__file__).absolute().parent \
     .joinpath("../workdir/training_images/not_worn/") \
-    .glob("image_*.png")
+    .glob("*.png")
 POSITIVES_PATH = Path(__file__).absolute().parent \
     .joinpath("../workdir/training_images/worn/") \
-    .glob("image_*.png")
+    .glob("*.png")
 SAVE_PATH = Path(__file__).absolute().parent.joinpath("../workdir/")
 
 
