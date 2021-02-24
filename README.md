@@ -30,7 +30,7 @@ The resulting (sqlite3) `project.db` will contain two tables: pieces and images.
 By default, the scraper will source from zalando.nl. As of now, this can only be changed in the spider code itself.
 
 
-### Step 1: Labeling Images (for Training) (TODO)
+### Step 1: Labeling Images (for Training)
 
 The scraper will not scrape the images themselves, but rather the URLs of those images, which will then be stored in the DB (table: images).
 
