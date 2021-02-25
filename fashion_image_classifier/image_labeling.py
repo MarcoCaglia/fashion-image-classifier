@@ -3,11 +3,10 @@
 import hashlib
 from io import BytesIO
 from pathlib import Path
-from typing import Iterable, List
+from typing import Iterable, List, Dict
 
 import numpy as np
 import pandas as pd
-import PIL
 import requests
 from IPython.display import display
 from pigeon import annotate
@@ -41,7 +40,7 @@ class ImageLabeler:
 
         # In this empty list, the downloaded images will be stored until the
         # user writes them to disk.
-        self.actual_images: List[PIL.Image] = []
+        self.actual_images: Dict = {}
 
     def _get_image_identifiers(self):
         # The unique identifier for each image (URL) will be the hashed URL, To
@@ -101,14 +100,14 @@ class ImageLabeler:
         # Use the label and url_hash from the annotated URLs, alongside the
         # actual images (downloaded and stored during annotation) to write
         # the results to disk.
-        for index, labeled_images in enumerate(self.annotated):
+        for labeled_images in self.annotated:
             path = self.save_path.joinpath(labeled_images[1]) \
                 .joinpath(labeled_images[0][1] + ".png")
-            self.actual_images[index].save(path)
+            self.actual_images[labeled_images[0][1]].save(path)
 
     def _check_subclass_folders_exist(self, standardized_options):
-        # For every option, make sure there is already a folder for it, 
-        # ootherwise create that folder.
+        # For every option, make sure there is already a folder for it,
+        # otherwise create that folder.
         for option in standardized_options:
             option_path = self.save_path.joinpath(option)
             if not option_path.is_dir():
@@ -117,8 +116,9 @@ class ImageLabeler:
     def _display_image(self, url_id):
         # This code requests the data from the image url and presents it to the
         # User for labeling.
-        url = url_id[0]
+        url = url_id[0]  # url_id is a tuple of the image's URL ...
+        image_id = url_id[1]  # ... and unique ID
         byte_response = requests.get(url)
         image = Image.open(BytesIO(byte_response.content))
-        self.actual_images.append(image)
+        self.actual_images[image_id] = image
         display(image)
