@@ -36,7 +36,7 @@ def evaluate():
         )
     metrics.to_csv(SAVE_PATH.joinpath("model_test_results.csv"))
 
-    confusion = sns.heatmap(confusion_matrix(y_test, y_hat))
+    confusion = sns.heatmap(confusion_matrix(y_test, y_hat), annot=True)
     confusion.figure.savefig(SAVE_PATH.joinpath("model_test_confusion.png"))
 
 
