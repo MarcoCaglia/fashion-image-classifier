@@ -2,38 +2,38 @@ prepare:
   cmd: python3 scripts/prepare.py
   deps:
   - path: scripts/prepare.py
-    md5: f8704165b0f19d5fe7222df35255a4aa
-    size: 1704
-  - path: workdir/training_images/not-worn/
-    md5: 3e7d648dd090a611d86140d4f794b6b6.dir
-    size: 8225753
-    nfiles: 97
+    md5: f7a0b62c9d645317be3dc601cd5e4e8c
+    size: 1692
+  - path: workdir/training_images/not_worn/
+    md5: 9cbf2627f16a7fc88ab0ad5c86db3871.dir
+    size: 18872930
+    nfiles: 148
   - path: workdir/training_images/worn/
-    md5: e0d1086812f64e2a5aca7b8db91f01c0.dir
-    size: 40070000
-    nfiles: 309
+    md5: bb47258f0ce369e1602b0ba19af22519.dir
+    size: 47718388
+    nfiles: 311
   outs:
   - path: workdir/test_features.npy
-    md5: 03382932046e3b8938cf0c9d37e82b34
-    size: 8061056
+    md5: d8d513cb37c333dd35d47a6f75c0af1e
+    size: 9044096
   - path: workdir/test_labels.npy
-    md5: dd1e55dc9fb61c9cace6377490f7dd3f
-    size: 456
+    md5: f21f88124f3410532383ceed3de13852
+    size: 496
   - path: workdir/train_features.npy
-    md5: c55ced6cdbcaabdb8c197cb9a78ea6c3
-    size: 71762048
+    md5: 13e5f9a362730fa708cd0f2f313d76c3
+    size: 81199232
   - path: workdir/train_labels.npy
-    md5: 06f997b9771218cb02eecce4cf37b27a
-    size: 3048
+    md5: 14fe95857525ef215e2e23cc8ca6671c
+    size: 3432
 train:
   cmd: python3 scripts/train.py
   deps:
   - path: workdir/train_features.npy
-    md5: c55ced6cdbcaabdb8c197cb9a78ea6c3
-    size: 71762048
+    md5: 13e5f9a362730fa708cd0f2f313d76c3
+    size: 81199232
   - path: workdir/train_labels.npy
-    md5: 06f997b9771218cb02eecce4cf37b27a
-    size: 3048
+    md5: 14fe95857525ef215e2e23cc8ca6671c
+    size: 3432
   params:
     params.yaml:
       train.classifier__C: 4.173106293191033
@@ -46,24 +46,24 @@ train:
       train.use_scaler: true
   outs:
   - path: workdir/model.joblib
-    md5: 8f3e9410eacef3e10b4874bf839c7da5
-    size: 204476595
+    md5: 481ced9ac4d1a41db40b22af70620e15
+    size: 143134119
 evaluate:
   cmd: python3 scripts/evaluate.py
   deps:
   - path: workdir/model.joblib
-    md5: 8f3e9410eacef3e10b4874bf839c7da5
-    size: 204476595
+    md5: 481ced9ac4d1a41db40b22af70620e15
+    size: 143134119
   - path: workdir/test_features.npy
-    md5: 03382932046e3b8938cf0c9d37e82b34
-    size: 8061056
+    md5: d8d513cb37c333dd35d47a6f75c0af1e
+    size: 9044096
   - path: workdir/test_labels.npy
-    md5: dd1e55dc9fb61c9cace6377490f7dd3f
-    size: 456
+    md5: f21f88124f3410532383ceed3de13852
+    size: 496
   outs:
   - path: workdir/model_test_confusion.png
-    md5: 545decbb57e8ddaa2c7f541a8d8960d9
-    size: 6911
+    md5: 6d55be628df816bee856e6b3646fd996
+    size: 8778
   - path: workdir/model_test_results.csv
-    md5: be692c7e477dfdf631efc9cd8a2e7a9e
-    size: 122
+    md5: 690c448ce45f8ab313a865db58b89f23
+    size: 108

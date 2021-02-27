@@ -3,7 +3,7 @@ stages:
     cmd: python3 scripts/prepare.py
     deps:
     - scripts/prepare.py
-    - workdir/training_images/not-worn/
+    - workdir/training_images/not_worn/
     - workdir/training_images/worn/
     outs:
     - workdir/test_features.npy
