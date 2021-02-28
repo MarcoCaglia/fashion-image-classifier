@@ -46,6 +46,8 @@ class SourcingPipeline:
             .drop_duplicates()
         image_data = data.loc[:, SourcingPipeline.IMAGE_COLUMNS].copy() \
             .drop_duplicates()
+        image_data["flag_model"] = -1  # Signifies that this image has not
+        # been labeled yet.
 
         self.apply_clothing_parsing(clothing_data)
         self.apply_images_parsing(image_data)

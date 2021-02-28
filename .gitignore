@@ -1,9 +1,20 @@
 # Local caches
 .vscode
-__pycache___
+__pycache__
 
-# Local Working directory (for data, logs, etc...)
-workdir/
+# Some local working directory files (for data, logs, etc...)
+workdir/buckets
+workdir/data
+workdir/training_images
+workdir/project.db
+workdir/scraping.log
 
 # Crawl records
 sourcing/crawls
+
+# Dev notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# Exception for Prototype Notebooks
+!scripts/*.ipynb
