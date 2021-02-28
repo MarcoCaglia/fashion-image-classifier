@@ -1,0 +1,9 @@
+train:
+  classifier__C: 4.173106293191033
+  classifier__gamma: 0.23475931378300663
+  classifier__kernel: "linear"
+  pca__kernel: "rbf"
+  pca__n_components: 321
+  pca__rbf_gamma: 0.9682615757193975
+  use_pca: False
+  use_scaler: True
