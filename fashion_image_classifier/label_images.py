@@ -101,7 +101,7 @@ def label_in_db(model_path: str, db_path: str, brand: str):
     with e.connect() as con:
         for url, label in upload_iterator:
             con.execute(
-                f"UPDATE images SET flag_model={label} WHERE url='{url}'"
+                f"UPDATE images SET flag_model={label} WHERE image='{url}'"
                 )
 
 
