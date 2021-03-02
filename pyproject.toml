@@ -14,6 +14,7 @@ pandas = "^1.2.1"
 Keras = "^2.4.3"
 tqdm = "^4.56.2"
 bayesian-optimization = "^1.2.0"
+Django = "^3.1.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
