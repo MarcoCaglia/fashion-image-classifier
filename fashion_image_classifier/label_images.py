@@ -112,7 +112,7 @@ def _load_images(engine, brand):
         "FROM images AS im "
         "JOIN pieces AS pi "
         "ON pi.item_id=im.item_id "
-        f"WHERE brand = '{brand}' AND flag_model IS NULL",
+        f"WHERE brand = '{brand}' AND (flag_model IS NULL OR flag_model = -1)",
         engine
     ).image.tolist()
 
