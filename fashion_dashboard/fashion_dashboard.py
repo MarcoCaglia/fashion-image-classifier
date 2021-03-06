@@ -44,26 +44,14 @@ class Dashboard:
     def _show_brand_distribution(self):
         brand_item_count = self.pieces_data.groupby("brand") \
             .item_id.nunique() \
-            .sort_values(ascending=False) \
             .reset_index() \
-            .head(50)
-        cds = ColumnDataSource(brand_item_count)
-        tooltip = HoverTool
-        plot = figure(
-            title="Items per Brand",
-            tools="pan,box_zoom,reset,save",
-            y_axis_label="Number of Item",
-            x_axis_label="Brand",
-            x_range=brand_item_count.brand.tolist()
-        )
+            .set_index("brand") \
+            .sort_values(by="item_id", ascending=False) \
+            .rename(columns={"item_id": "Number of Items"}) \
+            .head(25)
 
-        plot.vbar(
-            x="brand",
-            top="item_id",
-            source=cds
-            )
-
-        st.bokeh_chart(plot, use_container_width=True)
+        st.bar_chart(brand_item_count)
+        st.dataframe(brand_item_count)
 
     def _show_average_price_by_brand(self):
         pass
