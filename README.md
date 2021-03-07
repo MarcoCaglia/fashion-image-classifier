@@ -57,3 +57,8 @@ python3 fashion_image_classifier/label_images.py --model_path=workdir/model.jobl
 
 If the location of the model or the project DB was changed, that would need to be reflected in the function call.
 At this moment it is also necessary to pass a specific `brand` for which the images should be labeled.
+
+
+### Step 4: The Dashboard
+
+This repo includes a streamlit dashboard to visualize its findings. To run the dashboard, run `streamlit run fashion_dashboard.py` in the console. By the fault, the user can then reach the dashboard at `http://localhost:8501`.
