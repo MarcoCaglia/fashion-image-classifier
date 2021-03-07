@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from typing import Tuple
 
+import numpy as np
 import pandas as pd
 import streamlit as st
 from bokeh.models import HoverTool
@@ -37,27 +38,78 @@ class Dashboard:
 
     def make_page(self) -> None:
         """Construct Webpage."""
+        st.markdown(
+            "# KPIs by Brand on Zalando.nl\n"
+            "## Number of Items sold per Brand"
+            )
         self._show_brand_distribution()
+        st.markdown(
+            "## Average Price per Item per Brand"
+            )
         self._show_average_price_by_brand()
+        st.markdown(
+            "## Number of Model Photos per Item per Brand\n"
+            "##### where available"
+        )
         self._show_model_distribution_by_brand()
 
     def _show_brand_distribution(self):
+        # Get the number of unique item IDs per brand and display it
+        # Since there are so many unique brands, many of which aren't very
+        # relevant, only the 25 biggest are displayed in the graph, otherwise
+        # it will be too crowded.
         brand_item_count = self.pieces_data.groupby("brand") \
             .item_id.nunique() \
-            .reset_index() \
-            .set_index("brand") \
-            .sort_values(by="item_id", ascending=False) \
-            .rename(columns={"item_id": "Number of Items"}) \
-            .head(25)
+            .sort_values(ascending=False)
+        brand_item_count.name = "Items"
 
-        st.bar_chart(brand_item_count)
+        st.bar_chart(brand_item_count.head(25))
         st.dataframe(brand_item_count)
 
     def _show_average_price_by_brand(self):
-        pass
+        # Display the average price and median price per item per brand.
+        # Again, in the graph only the biggest brands are shown, otherwise it
+        # would get too crowded
+        price_info = self.pieces_data.groupby("brand").agg(
+            {"price": [np.mean, np.median]}
+        ).dropna()
+        price_info.columns = ["Average Price", "Median Price"]
+
+        # Get largest brands
+        largest_brands = self.pieces_data.groupby("brand").item_id.nunique() \
+            .sort_values(ascending=False) \
+            .head(25) \
+            .index \
+            .tolist()
+
+        # Display Mean and Median price in two different charts
+        st.bar_chart(price_info.loc[largest_brands, ["Average Price"]])
+        st.bar_chart(price_info.loc[largest_brands, ["Median Price"]])
+        st.dataframe(price_info)
 
     def _show_model_distribution_by_brand(self):
-        pass
+        # Merge pieces and image information to be able to see images and model
+        # images on brand level
+        joined_information = self.image_data.merge(
+            self.pieces_data, on='item_id'
+            )
+        # Discard, where the flag_model is not calculated
+        joined_information = joined_information.loc[
+            joined_information.flag_model.isin([0, 1]),
+            :
+            ]
+
+        # Aggregate on Brand level
+        image_information = joined_information.groupby("brand").agg(
+            {"image": "nunique", "flag_model": np.sum}
+        )
+        image_information.columns = [
+            "Number of Images", "Number of Model Images"
+            ]
+
+        # Display the KPIs
+        st.bar_chart(image_information.loc[:, ["Number of Images"]])
+        st.bar_chart(image_information.loc[:, ["Number of Model Images"]])
 
 
 if __name__ == "__main__":
