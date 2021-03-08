@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
-import PIL
 import requests
 from joblib import load
 from PIL import Image
