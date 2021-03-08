@@ -38,6 +38,16 @@ class Dashboard:
 
     def make_page(self) -> None:
         """Construct Webpage."""
+        # Add in sidebar with level selection, to drill down on brand level
+        scope_selection = self._select_scope()
+
+        # Display the KPIs according to the specified scope
+        if scope_selection == "All Brands":
+            self._display_general_api()
+        else:
+            st.write("Coming Soon....")
+
+    def _display_general_api(self):
         st.markdown(
             "# KPIs by Brand on Zalando.nl\n"
             "## Number of Items sold per Brand"
@@ -52,6 +62,21 @@ class Dashboard:
             "##### where available"
         )
         self._show_model_distribution_by_brand()
+
+    def _select_scope(self):
+        # Displayed are all brands in order of their size (descending),
+        # i.e. the one with the most items should be on top
+        brands = self.pieces_data.groupby("brand").item_id.nunique() \
+            .sort_values(ascending=False) \
+            .index \
+            .tolist()
+        brands.insert(0, "All Brands")
+        scope_selection = st.sidebar.selectbox(
+            "Choose Brand to drill down to:",
+            brands
+        )
+
+        return scope_selection
 
     def _show_brand_distribution(self):
         # Get the number of unique item IDs per brand and display it
