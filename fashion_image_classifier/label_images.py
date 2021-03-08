@@ -14,7 +14,7 @@ from sklearn.pipeline import Pipeline
 from sqlalchemy import create_engine
 from tqdm import tqdm
 
-from fashion_image_classifier.feature_extraction import FeatureExtractor
+from feature_extraction import FeatureExtractor
 
 
 class ImageLabeler:
