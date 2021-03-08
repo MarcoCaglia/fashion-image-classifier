@@ -10,6 +10,8 @@ git clone https://github.com/MarcoCaglia/yt-content-analysis@[RELEASE]
 ```
 in your terminal.
 
+To install the dependencies, it is recommended to use poetry. if it is installed on the system, the dependencies can be installed with `poetry install`
+
 ### Step 0: Sourcing the data
 The repo comes with a scraper for zalando data. To run the scraper, navigate to the `sourcing` directory and run the `zalando_crawler`.
 
