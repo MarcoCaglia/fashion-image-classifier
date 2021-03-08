@@ -64,3 +64,8 @@ At this moment it is also necessary to pass a specific `brand` for which the ima
 ### Step 4: The Dashboard
 
 This repo includes a streamlit dashboard to visualize its findings. To run the dashboard, run `streamlit run fashion_dashboard.py` in the console. By the fault, the user can then reach the dashboard at `http://localhost:8501`.
+
+#### Drilling Down
+The Dashboard is split into sections, which can be selected from the sidebar. By default "All Brands" is selected and the App will show KPIs related to inter-brand comparison.
+
+Alternatively the user can choose a specific brand from the sidebar to see brand-specific KPIs.
