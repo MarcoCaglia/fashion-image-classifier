@@ -7,8 +7,8 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 import streamlit as st
-from bokeh.models import HoverTool
-from bokeh.plotting import ColumnDataSource, figure
+import plotly.figure_factory as ff
+from plotly import express
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
@@ -43,11 +43,70 @@ class Dashboard:
 
         # Display the KPIs according to the specified scope
         if scope_selection == "All Brands":
-            self._display_general_api()
+            self._display_general_kpi()
         else:
-            st.write("Coming Soon....")
+            self._display_drilldown(scope_selection)
 
-    def _display_general_api(self):
+    def _select_comparison_brand(self, scope_selection):
+        # Present only options that are not already in scope
+        options = self.pieces_data.loc[
+            self.pieces_data.brand != scope_selection,
+            "brand"
+        ].sort_values().drop_duplicates().tolist()
+        # Give also teh option of not having a comparison
+        options.insert(0, "No Comparison")
+        compare_brand = st.selectbox(
+            "Select Brand to compare:",
+            options
+        )
+
+        return compare_brand
+
+    def _display_drilldown(self, scope_selection):
+        # Give option to compare price distribution with another brand
+        comparison_brand = self._select_comparison_brand(scope_selection)
+        # Price Distribution of Brand
+        price_distribution = self.pieces_data.loc[
+            self.pieces_data.brand == scope_selection,
+            "price"
+            ].dropna().tolist()
+        # If a comparison brand was selected, add that to the data to be
+        # plotted
+        if comparison_brand == "No Comparison":
+            data_to_plot = [price_distribution]
+            group_labels = [scope_selection]
+        else:
+            comparison_data = self.pieces_data.loc[
+                self.pieces_data.brand == comparison_brand,
+                "price"
+            ].dropna().tolist()
+            data_to_plot = [price_distribution, comparison_data]
+            group_labels = [scope_selection, comparison_brand]
+
+        # Make the plotly chart and display it
+        price_chart = ff.create_distplot(
+            data_to_plot,
+            group_labels=group_labels
+            )
+        st.plotly_chart(price_chart)
+
+        # Colour Distribution of Brand
+        self._display_colour_distribution(scope_selection)
+
+    def _display_colour_distribution(self, scope_selection):
+        colour_distribution = self.pieces_data.loc[
+            self.pieces_data.brand == scope_selection,
+            ["colour", "item_id"]
+        ].groupby("colour").item_id.nunique() \
+            .sort_values(ascending=False) \
+            .reset_index() \
+            .head(50)
+        colour_chart = express.bar(
+            colour_distribution, x="colour", y="item_id"
+            )
+        st.plotly_chart(colour_chart)
+
+    def _display_general_kpi(self):
         st.markdown(
             "# KPIs by Brand on Zalando.nl\n"
             "## Number of Items sold per Brand"
