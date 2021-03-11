@@ -10,8 +10,6 @@ class ZalandoItem(scrapy.Item):
     item_id = scrapy.Field()
     name = scrapy.Field()
     price = scrapy.Field()
-    rating = scrapy.Field()
-    reviews = scrapy.Field()
     brand = scrapy.Field()
     colour = scrapy.Field()
     image = scrapy.Field()
