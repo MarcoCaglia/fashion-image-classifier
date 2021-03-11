@@ -43,7 +43,9 @@ class ZalandoCrawlerSpider(CrawlSpider):
         item["brand"] = response.css('h3.OEhtt9.ka2E9k.uMhVZi.uc9Eq5.pVrzNP._5Yd-hZ::text').extract_first()
         item["price"] = response.css('span.uqkIZw.ka2E9k.uMhVZi.FxZV-M.z-oVg8.pVrzNP::text').extract_first()
         if not item["price"]:
-            response.css('span.uqkIZw.ka2E9k.uMhVZi.dgII7d.z-oVg8._88STHx.cMfkVL::text').extract_first()
+            item["price"] = response.css('span.uqkIZw.ka2E9k.uMhVZi.dgII7d.z-oVg8._88STHx.cMfkVL::text').extract_first()
+        item["reviews"] = response.css("h5.ZcZXP0.ka2E9k.uMhVZi.z-oVg8.pVrzNP::text").extract_first()
+        item["rating"] = response.css("span.AKpsL5.ka2E9k.uMhVZi.uc9Eq5.pVrzNP::text").extract_first()
         item["colour"] = response.css('span.u-6V88.ka2E9k.uMhVZi.dgII7d.z-oVg8.pVrzNP::text').extract_first()
         item["image"] = response.xpath('/html/body/div/div/div/div/div/x-wrapper-re-1-2/div/div') \
             .css('img._6uf91T.z-oVg8.u-6V88.ka2E9k.uMhVZi.FxZV-M._2Pvyxl.JT3_zV.EKabf7.mo6ZnF._1RurXL.mo6ZnF.PZ5eVw').xpath("@src").extract()

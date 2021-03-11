@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
-import PIL
 import requests
 from joblib import load
 from PIL import Image
@@ -14,7 +13,7 @@ from sklearn.pipeline import Pipeline
 from sqlalchemy import create_engine
 from tqdm import tqdm
 
-from fashion_image_classifier.feature_extraction import FeatureExtractor
+from feature_extraction import FeatureExtractor
 
 
 class ImageLabeler:
@@ -112,7 +111,7 @@ def _load_images(engine, brand):
         "FROM images AS im "
         "JOIN pieces AS pi "
         "ON pi.item_id=im.item_id "
-        f"WHERE brand = '{brand}' AND flag_model IS NULL",
+        f"WHERE brand = '{brand}' AND (flag_model IS NULL OR flag_model = -1)",
         engine
     ).image.tolist()
 

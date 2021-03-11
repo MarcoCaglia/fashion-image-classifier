@@ -15,7 +15,16 @@ import numpy as np
 
 class SourcingPipeline:
 
-    CLOTHING_COLUMNS = ("item_id", 'name', "brand", "price", "colour", "url")
+    CLOTHING_COLUMNS = (
+        "item_id",
+        'name',
+        "brand",
+        "price",
+        "colour",
+        "url",
+        "reviews",
+        "rating"
+        )
     IMAGE_COLUMNS = ("item_id", "image")
 
     def __init__(self, workdir):
@@ -49,6 +58,7 @@ class SourcingPipeline:
         image_data["flag_model"] = -1  # Signifies that this image has not
         # been labeled yet.
 
+        # Apply parsing steps to the individual tables
         self.apply_clothing_parsing(clothing_data)
         self.apply_images_parsing(image_data)
 
@@ -69,6 +79,18 @@ class SourcingPipeline:
 
     def apply_clothing_parsing(self, clothing_data):
         clothing_data = self.parse_price(clothing_data)
+        clothing_data = self.parse_reviews(clothing_data)
+        clothing_data.rating = clothing_data.rating.astype(float)
+
+        return clothing_data
+
+    def parse_reviews(self, clothing_data):
+        integer_pattern = re.compile(r"\d+")
+        clothing_data.reviews = clothing_data.reviews.map(
+            lambda reviews: re.findall(integer_pattern, reviews)[0]
+            if re.search(integer_pattern, str(reviews))
+            else np.NaN
+        )
 
         return clothing_data
 

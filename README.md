@@ -10,6 +10,8 @@ git clone https://github.com/MarcoCaglia/yt-content-analysis@[RELEASE]
 ```
 in your terminal.
 
+To install the dependencies, it is recommended to use poetry. if it is installed on the system, the dependencies can be installed with `poetry install`
+
 ### Step 0: Sourcing the data
 The repo comes with a scraper for zalando data. To run the scraper, navigate to the `sourcing` directory and run the `zalando_crawler`.
 
@@ -57,3 +59,13 @@ python3 fashion_image_classifier/label_images.py --model_path=workdir/model.jobl
 
 If the location of the model or the project DB was changed, that would need to be reflected in the function call.
 At this moment it is also necessary to pass a specific `brand` for which the images should be labeled.
+
+
+### Step 4: The Dashboard
+
+This repo includes a streamlit dashboard to visualize its findings. To run the dashboard, run `streamlit run fashion_dashboard.py` in the console. By the fault, the user can then reach the dashboard at `http://localhost:8501`.
+
+#### Drilling Down
+The Dashboard is split into sections, which can be selected from the sidebar. By default "All Brands" is selected and the App will show KPIs related to inter-brand comparison.
+
+Alternatively the user can choose a specific brand from the sidebar to see brand-specific KPIs.
