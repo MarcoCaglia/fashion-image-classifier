@@ -55,7 +55,8 @@ class Dashboard:
             self.pieces_data.brand != scope_selection,
             "brand"
         ].sort_values().drop_duplicates().tolist()
-        # Give also teh option of not having a comparison
+
+        # Give also the option of not having a comparison
         options.insert(0, "No Comparison")
         compare_brand = st.selectbox(
             "Select Brand to compare:",
@@ -94,6 +95,44 @@ class Dashboard:
 
         # Colour Distribution of Brand
         self._display_colour_distribution(scope_selection)
+
+        # Display popularity metrics for this brand
+        self._show_brand_popularity(scope_selection, comparison_brand)
+
+    def _show_brand_popularity(self, scope_selection, comparison_brand):
+        st.markdown(
+            "## Brand Popularity"
+        )
+        # User should be able to check which metric to compare.
+        metric = st.selectbox(
+            "Select Metric: ",
+            ["Reviews", "Rating"]
+        ).lower()
+
+        # Prepare the data to be displayed
+        data_to_plot = self.pieces_data.loc[
+            self.pieces_data.brand == scope_selection,
+            metric
+        ].dropna().values.astype(float)
+
+        # If a comparison brand has been selected, add it, otherwise just
+        # display the selected brand
+        data_to_plot = [data_to_plot]
+        group_labels = [scope_selection]
+        if comparison_brand != "No Comparison":
+            comparison_data = self.pieces_data.loc[
+                self.pieces_data.brand == comparison_brand,
+                metric
+            ].dropna().values.astype(float)
+            data_to_plot.append(comparison_data)
+            group_labels.append(comparison_brand)
+
+        # Make and display the plotly chart
+        popularity_chart = ff.create_distplot(
+            data_to_plot,
+            group_labels=group_labels
+            )
+        st.plotly_chart(popularity_chart)
 
     def _display_colour_distribution(self, scope_selection):
         colour_distribution = self.pieces_data.loc[
