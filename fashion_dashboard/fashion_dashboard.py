@@ -6,10 +6,11 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
-import streamlit as st
 import plotly.figure_factory as ff
-from plotly import express
+import streamlit as st
+from pandas import to_numeric
 from dotenv import load_dotenv
+from plotly import express
 from sqlalchemy import create_engine
 
 load_dotenv()
@@ -39,7 +40,8 @@ class Dashboard:
     def make_page(self) -> None:
         """Construct Webpage."""
         # Add in sidebar with level selection, to drill down on brand level
-        scope_selection = self._select_scope()
+        scope_selection = self._select_scope()  # Seems to be broken.
+        # Selection Jumps back immediantly.
 
         # Display the KPIs according to the specified scope
         if scope_selection == "All Brands":
@@ -53,7 +55,8 @@ class Dashboard:
             self.pieces_data.brand != scope_selection,
             "brand"
         ].sort_values().drop_duplicates().tolist()
-        # Give also teh option of not having a comparison
+
+        # Give also the option of not having a comparison
         options.insert(0, "No Comparison")
         compare_brand = st.selectbox(
             "Select Brand to compare:",
@@ -93,6 +96,44 @@ class Dashboard:
         # Colour Distribution of Brand
         self._display_colour_distribution(scope_selection)
 
+        # Display popularity metrics for this brand
+        self._show_brand_popularity(scope_selection, comparison_brand)
+
+    def _show_brand_popularity(self, scope_selection, comparison_brand):
+        st.markdown(
+            "## Brand Popularity"
+        )
+        # User should be able to check which metric to compare.
+        metric = st.selectbox(
+            "Select Metric: ",
+            ["Reviews", "Rating"]
+        ).lower()
+
+        # Prepare the data to be displayed
+        data_to_plot = self.pieces_data.loc[
+            self.pieces_data.brand == scope_selection,
+            metric
+        ].dropna().values.astype(float)
+
+        # If a comparison brand has been selected, add it, otherwise just
+        # display the selected brand
+        data_to_plot = [data_to_plot]
+        group_labels = [scope_selection]
+        if comparison_brand != "No Comparison":
+            comparison_data = self.pieces_data.loc[
+                self.pieces_data.brand == comparison_brand,
+                metric
+            ].dropna().values.astype(float)
+            data_to_plot.append(comparison_data)
+            group_labels.append(comparison_brand)
+
+        # Make and display the plotly chart
+        popularity_chart = ff.create_distplot(
+            data_to_plot,
+            group_labels=group_labels
+            )
+        st.plotly_chart(popularity_chart)
+
     def _display_colour_distribution(self, scope_selection):
         colour_distribution = self.pieces_data.loc[
             self.pieces_data.brand == scope_selection,
@@ -121,6 +162,33 @@ class Dashboard:
             "##### where available"
         )
         self._show_model_distribution_by_brand()
+        st.markdown(
+            "# Average Rating and Reviews by Brand"
+            )
+        self._show_popularity()
+
+    def _show_popularity(self):
+        # Let the user choose which metric to display
+        metric = st.selectbox("Display Metric:", ["Rating", "Reviews"])
+
+        # Currently there is a bug in the scraper, in which it sometimes fails
+        # to return the number of reviews, which should be fixed, since None
+        # reviews leads to a data error in the associated GroupBy call. For
+        # now, empty entries will just be coerced and dropped.
+        avg_popularity = self.pieces_data.copy()
+        avg_popularity[metric.lower()] = to_numeric(
+            avg_popularity[metric.lower()],
+            errors="coerce"
+            )
+
+        # After those workarounds, the data can be grouped and displayed
+        avg_popularity = avg_popularity.groupby("brand").agg(
+            {metric.lower(): np.mean}
+        ).sort_values(by=metric.lower(), ascending=False).reset_index()
+        avg_popularity.columns = ["Brand", f"Mean {metric}"]
+        fig = express.bar(avg_popularity, x="Brand", y=f"Mean {metric}")
+
+        st.plotly_chart(fig)
 
     def _select_scope(self):
         # Displayed are all brands in order of their size (descending),
