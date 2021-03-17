@@ -2,6 +2,7 @@
 
 import argparse
 import io
+from itertools import chain
 from pathlib import Path
 from typing import List
 
@@ -56,8 +57,25 @@ class ImageLabeler:
         return features
 
     def _label_features(self, features):
-        # Use the model passed on initialization to add labels to the data
-        labels = self.model.predict(features)
+        # If the feature matrix is passed all at once, the model will consume
+        # far to much memory during prediction. To avoid that, the features
+        # will be split in chunks of 100 rows with the help of a generator. The
+        # resulting predictions will then be unpacked into a single continous
+        # array.
+        batchsize = 100  # This will be the number of rows in each batch.
+
+        # Split the batches with a generator expression.
+        split_batches = (
+            features[100 * i: 100 * (i + 1)]
+            for i in range(features.shape[0] // batchsize + 1)
+            )
+        # Get a list of arrays of labels
+        labels = [
+            self.model.predict(batch) for batch in split_batches
+            ]
+
+        # Unpack the list of arrays of labels into a list of labels
+        labels = list(chain.from_iterable(labels))
 
         return labels
 
