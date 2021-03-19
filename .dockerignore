@@ -1,0 +1,4 @@
+# Not required fies from workdir
+workdir/buckets
+!workdir/project.db
+!workdir/model.joblib
