@@ -6,7 +6,7 @@ The purpose of this repository is to train a binary image classifier, which can 
 ## Getting Started
 You can clone this repo by running 
 ```
-git clone https://github.com/MarcoCaglia/yt-content-analysis@[RELEASE]
+git clone https://github.com/MarcoCaglia/yt-content-analysis@[TAG]
 ```
 in your terminal.
 
