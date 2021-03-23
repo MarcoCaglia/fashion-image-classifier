@@ -19,7 +19,9 @@ COPY workdir/model.joblib ./workdir/model.joblib
 COPY pyproject.toml ./pyproject.toml
 COPY poetry.lock ./poetry.lock
 COPY .env ./.env
-COPY ./.streamlit/ ./.streamlit/
+# Note that heroku_user would not have write access by default to the
+# below directory
+COPY --chown=heroku_user:heroku_user ./.streamlit/ ./.streamlit/
 
 # Install dependecies (project dependecies)
 RUN poetry install --no-dev
