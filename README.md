@@ -6,7 +6,7 @@ The purpose of this repository is to train a binary image classifier, which can 
 ## Getting Started
 You can clone this repo by running 
 ```
-git clone https://github.com/MarcoCaglia/yt-content-analysis@[RELEASE]
+git clone https://github.com/MarcoCaglia/yt-content-analysis@[TAG]
 ```
 in your terminal.
 
@@ -57,3 +57,26 @@ python3 fashion_image_classifier/label_images.py --model_path=workdir/model.jobl
 
 If the location of the model or the project DB was changed, that would need to be reflected in the function call.
 At this moment it is also necessary to pass a specific `brand` for which the images should be labeled.
+
+### Step 4: The Dashboard
+
+This repo includes a streamlit dashboard to visualize its findings. To run the dashboard, run `streamlit run fashion_dashboard/fashion_dashboard.py` in the console. The address of the dashboard will then be shown in the console
+
+#### Drilling Down
+The Dashboard is split into sections, which can be selected from the sidebar. By default "All Brands" is selected and the App will show KPIs related to inter-brand comparison.
+
+Alternatively the user can choose a specific brand from the sidebar to see brand-specific KPIs.
+
+#### Deployment
+The repository contains a Dockerfile, which is ready for deployment.
+
+To run the dashboard on a local container, the user can run:
+```
+docker build -t [IMAGE_TAG] .
+docker run -p [EXPOSE_PORT]:[EXPOSE_PORTPORT] --env PORT=[EXPOSE_PORT ][IMAGE_TAG]
+```
+
+Where [IMAGE_TAG] refers to the name the user wants the image to have and [EXPOSE_PORT] refers to the port the user wants the dashboard to be available on.
+
+To run the container on Heroku (can be done within the free-tier limits), the user can refer to this documentation:
+https://devcenter.heroku.com/articles/container-registry-and-runtime
