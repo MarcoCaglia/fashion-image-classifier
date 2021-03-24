@@ -1,25 +1,30 @@
 # Set Base Image
 FROM python:3.9.1
 
-# Set Working Directroy
-WORKDIR /home/usr/
+# Install Poetry (system dependecy)
+RUN pip3 install poetry
 
-# Expose Port
-EXPOSE 8000
+# Run as non-root user
+RUN adduser heroku_user
+USER heroku_user
+
+# Set Workdir
+WORKDIR /home/heroku_user
 
 # Copy Files
-COPY fashion_image_classifier/ /home/usr/fashion_image_classifier/
-COPY fashion_dashboard/ /home/usr/fashion_dashboard/
-COPY workdir/project.db /home/usr/workdir/project.db
-COPY workdir/model.joblib /home/usr/workdir/model.joblib
-COPY pyproject.toml /home/usr/pyproject.toml
-COPY poetry.lock /home/usr/poetry.lock
-COPY .env /home/usr/.env
+COPY fashion_image_classifier/ ./fashion_image_classifier/
+COPY fashion_dashboard/ ./fashion_dashboard/
+COPY workdir/project.db ./workdir/project.db
+COPY workdir/model.joblib ./workdir/model.joblib
+COPY pyproject.toml ./pyproject.toml
+COPY poetry.lock ./poetry.lock
+COPY .env ./.env
+# Note that heroku_user would not have write access by default to the
+# below directory
+COPY --chown=heroku_user:heroku_user ./.streamlit/ ./.streamlit/
 
-# Install Poetry and dependencies
-RUN pip3 install poetry
-RUN poetry env use 3.9.1
+# Install dependecies (project dependecies)
 RUN poetry install --no-dev
 
 # Spin up Dashboard
-CMD ["poetry", "run", "streamlit", "run", "fashion_dashboard/fashion_dashboard.py"]
+CMD poetry run streamlit run fashion_dashboard/fashion_dashboard.py --server.port $PORT

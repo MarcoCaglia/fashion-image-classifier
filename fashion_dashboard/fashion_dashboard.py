@@ -66,9 +66,17 @@ class Dashboard:
         return compare_brand
 
     def _display_drilldown(self, scope_selection):
+        # Display Page Header
+        st.markdown(
+            f"# Drilling down to {scope_selection}"
+            )
         # Give option to compare price distribution with another brand
         comparison_brand = self._select_comparison_brand(scope_selection)
         # Price Distribution of Brand
+        section_header = f"## Price Distribution of {scope_selection}"
+        if comparison_brand != "No Comparison":
+            section_header += f" and {comparison_brand}"
+        st.markdown(section_header)
         price_distribution = self.pieces_data.loc[
             self.pieces_data.brand == scope_selection,
             "price"
@@ -100,9 +108,10 @@ class Dashboard:
         self._show_brand_popularity(scope_selection, comparison_brand)
 
     def _show_brand_popularity(self, scope_selection, comparison_brand):
-        st.markdown(
-            "## Brand Popularity"
-        )
+        section_header = f"## Brand Popularity of {scope_selection}"
+        if comparison_brand != "No Comparison":
+            section_header += f" and {comparison_brand}"
+        st.markdown(section_header)
         # User should be able to check which metric to compare.
         metric = st.selectbox(
             "Select Metric: ",
@@ -135,6 +144,9 @@ class Dashboard:
         st.plotly_chart(popularity_chart)
 
     def _display_colour_distribution(self, scope_selection):
+        st.markdown(
+            f"## Colours of {scope_selection}"
+        )
         colour_distribution = self.pieces_data.loc[
             self.pieces_data.brand == scope_selection,
             ["colour", "item_id"]
